@@ -24,7 +24,7 @@ int main(){
 
     //runCodeWithSoftwarePolling();
 
-    runCodeWithInterrupts();
+    //runCodeWithInterrupts();
 
     return 0;
 }
