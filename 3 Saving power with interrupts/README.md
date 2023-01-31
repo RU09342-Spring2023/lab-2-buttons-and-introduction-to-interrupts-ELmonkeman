@@ -1,3 +1,5 @@
+![Screenshot (54)](https://user-images.githubusercontent.com/122936273/215905001-c2d798d8-00e8-4a2f-b20c-fcb2b44677be.png)
+![Screenshot (55)](https://user-images.githubusercontent.com/122936273/215905158-9b3c87a4-9836-4762-a5a2-1fb2e0bdb659.png)
 # Saving and Measuring Power on your Microcontroller
 While plugged into your computer or a charger, the power consumption of your device might not be of utmost importance, but many systems are seeking for low power consumption. To get this discussion started, we are going to take a look at two different pieces of code to simply turn an LED on when a button is pressed. But we will see that one method keeping the CPU on consumes much more power than when we can turn them off. This will be monitored using Energy Trace which is built in to the Code Composer IDE.
 
