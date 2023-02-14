@@ -1,12 +1,76 @@
-# Lab Exercise 2: Interrupts and Energy Trace
-The purpose of this lab is to explore the input functionality of the Microprocessor and begin looking at interrupts. You will also be looking into a very power tool within Code Composer: Energy Trace, which allows you to see power consumption of your processor and design. You will then interface a PIR sensor to your board to be able to do occupancy detection. Finally, you will design an intruder alarm system, which will notify a user that the system is armed, indicated when a person is detected, and then finally set an "alarm" when they stay too long.
+/*
+ * OccupancyDetector.c
+ *
+ *  Created on: Feb 6, 2023
+ *      Author: David Miller
+ */
+#include <msp430.h>
+#include <time.h>
+#define ARMED_STATE 0
+#define WARNING_STATE 1
+#define ALERT_STATE 2
+int main(void)
+{
+        P1OUT &= ~BIT0;
+        P1DIR |=BIT0;
+        PM5CTL0 &=~LOCKLPM5;
+        WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
+        P6OUT &= ~BIT6;
+        P6DIR |=BIT6;
+        PM5CTL0 &=~LOCKLPM5;
+        P4REN |= BIT1;
+        P4OUT |=BIT1;
+        P6OUT ^=BIT6;
 
-## Assignment
-Each of the following bullet items are in their own numeric folder and meant to go in order.
+char state = WARNING_STATE;
+int y = 0;
+int x = 0;
+while(1)
+{
+  switch (state) {
+    case WARNING_STATE:
+    {
+        while (!(P4IN & BIT1))
+        {
+            P1OUT^=BIT0;
+            P6OUT &= ~BIT6;
+                if (x > 19)
+                {
+                y = 1;
+                break;
+                }
+            x++;
+            __delay_cycles(500000);
+        }
+    }
+    case ALERT_STATE:
+    {
+        while ( y > 0)
+            {
+            P1OUT|=BIT0;
+            P6OUT &= ~BIT6;
+                   if(!(P4IN & BIT1)==0x00)
+                    {
+                    __delay_cycles(500000);
+                    break;
+                    }
+            }
+    }
+    default : //ARMED_STATE
+    {
+        while (1)
+            {
+            x=0;
+            P6OUT^=BIT6;
+            P1OUT &= ~BIT0;
+            __delay_cycles(3000000);
+                if (!(P4IN & BIT1))
+                    {
+            break;
+        }
+  }
+  }
 
-To complete this assignment, you will need to:
-- [ ] 1. Investigate the Buttons on the Launchpad and configure Pullup/Pulldown Resistors for them to work correctly.
-- [ ] 2. Learn about the Interrupt Routine and how it interfaces with your software.
-- [ ] 3. Use Interrupts to implement the alternative blinking LED example from Lab 1
-- [ ] 4. Explore how interrupts can be used to save power versus polling.
-- [ ] 5. Design the Intruder Security System
+}
+}
+}
